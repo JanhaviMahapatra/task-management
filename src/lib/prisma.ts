@@ -8,10 +8,15 @@ const dbPath = process.env.NODE_ENV === 'production'
   ? '/tmp/dev.db'
   : path.join(process.cwd(), 'prisma', 'dev.db');
 
-// Ensure database file and schema exist at runtime in production
-if (process.env.NODE_ENV === 'production' && !fs.existsSync(dbPath)) {
+// Only auto-create database inside runtime server environment, avoiding build step
+if (
+  process.env.NODE_ENV === 'production' &&
+  typeof window === 'undefined' &&
+  !fs.existsSync(dbPath)
+) {
   try {
-    execSync(`npx prisma db push --url "file:${dbPath}" --skip-generate`);
+    // Corrected Prisma 7 db push command without unsupported flags
+    execSync(`npx prisma db push --url "file:${dbPath}" --accept-data-loss`);
   } catch (err) {
     console.error('Failed to initialize SQLite runtime DB:', err);
   }
