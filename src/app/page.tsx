@@ -3,13 +3,21 @@ import TaskForm from '@/components/TaskForm';
 import TaskCard from '@/components/TaskCard';
 import { LayoutDashboard, CheckCircle2, Clock, ListTodo } from 'lucide-react';
 
+interface Task {
+id: string;
+title: string;
+description?: string | null;
+status: string;
+priority: string;
+}
+
 export default async function Dashboard() {
-const tasks = await getTasks();
+const tasks: Task[] = await getTasks();
 
 const total = tasks.length;
-const pending = tasks.filter((t) => t.status === 'PENDING').length;
-const inProgress = tasks.filter((t) => t.status === 'IN_PROGRESS').length;
-const completed = tasks.filter((t) => t.status === 'COMPLETED').length;
+const pending = tasks.filter((t: Task) => t.status === 'PENDING').length;
+const inProgress = tasks.filter((t: Task) => t.status === 'IN_PROGRESS').length;
+const completed = tasks.filter((t: Task) => t.status === 'COMPLETED').length;
 
 return (
 <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 p-6 md:p-12 max-w-6xl mx-auto">
@@ -20,6 +28,7 @@ return (
 <p className="text-zinc-500 text-sm mt-1">Organize and track your daily priorities.</p>
 </header>
 
+{/* Metrics Section */}
 <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
 <div className="p-4 bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800">
 <p className="text-xs text-zinc-400 font-medium">Total Tasks</p>
@@ -44,8 +53,11 @@ return (
 <p className="text-2xl font-bold mt-1">{completed}</p>
 </div>
 </section>
+
+{/* Create Task Form */}
 <TaskForm />
 
+{/* Task List */}
 <section>
 <h2 className="text-xl font-semibold mb-4">Tasks Overview</h2>
 {tasks.length === 0 ? (
@@ -54,8 +66,8 @@ No tasks found. Create one above to get started!
 </div>
 ) : (
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-{tasks.map((task) => (
-<TaskCard key={task.id} task={task} />
+{tasks.map((task: Task) => (
+  <TaskCard key={task.id} task={task} />
 ))}
 </div>
 )}
