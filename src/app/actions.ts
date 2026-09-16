@@ -35,6 +35,35 @@ export async function createTask(formData: FormData) {
     return { success: true };
   } catch (error) {
     console.error('Error creating task:', error);
-    throw new Error('Failed to create task in database');
+    throw new Error('Failed to create task');
+  }
+}
+
+export async function updateTaskStatus(id: string, status: string) {
+  try {
+    await prisma.task.update({
+      where: { id },
+      data: { status },
+    });
+
+    revalidatePath('/');
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating task status:', error);
+    throw new Error('Failed to update task status');
+  }
+}
+
+export async function deleteTask(id: string) {
+  try {
+    await prisma.task.delete({
+      where: { id },
+    });
+
+    revalidatePath('/');
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting task:', error);
+    throw new Error('Failed to delete task');
   }
 }
